@@ -1,0 +1,30 @@
+name: GitHub API Interaction
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  interact-with-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Interact with GitHub API
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            async function listRepoIssues() {
+              const { data: issues } = await github.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+
+              console.log(issues);
+            }
+
+            listRepoIssues();
